@@ -1,0 +1,27 @@
+body{
+    background: url("images/giphy-api.jpg");
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+ #train-table th,
+    td {
+      display: inline-block;
+      width: 16.575%;
+    }
+.card-header{
+    background: rgb(53, 64, 100);
+    color: white;
+}
+p{
+  align-content: center;  
+}
+.btn-primary{
+    background: rgb(53, 64, 100);
+}
+#update{
+  float: right;
+  
+}
+#remove{
+  float: right;
+}
