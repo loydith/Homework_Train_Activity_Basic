@@ -13,70 +13,98 @@ var config = {
   var database = firebase.database();
     var name;
     var destination;
-    var nextArrival;
+    var firstTrain;
     var frequency;
-
-    $("#update").hide();
-    $("#remove").hide();
+    
 
 //click on the button Submit
    $("#submit").on("click", function(event){
        event.preventDefault();
         name = $("#train-name-input").val().trim();
         destination = $("#destination-input").val().trim();
-        nextArrival = $("#train-time-input").val().trim();
-        frequency = $("#frecuency-input").val().trim();
+        firstTrain = $("#first-train-input").val().trim();
+        frequency = $("#frequency-input").val().trim();
 
         database.ref().push({
             name:name,
             destination:destination,
-            nextArrival:nextArrival,
+            firstTrain:firstTrain,
             frequency:frequency,
         });
-        
-        update = $("<td>").text($("#update").show());
+        $("#remove").show();   
         remove = $("<td>").text($("#remove").show());
-                
     });
     database.ref().on("child_added", function(childSnapshot){
         var t = childSnapshot.val();
         console.log(t.name);
         console.log(t.destination);
-        console.log(t.nextArrival);
+        console.log(t.firstTrain);
         console.log(t.frequency);
+
+        $("#train-name-input").val();
+        $("#destination-input").val();
+        $("#first-train-input").val();
+        $("#frequency-input").val();
+        
+
+
         //create a new row
         var newRow = $("<tr>");
+
         var nameRow = $("<td>").text(t.name);
         var destinationRow = $("<td>").text(t.destination);
-        var frecuencyRow = $("<td>").text(t.frequency);
+        var firsttrainRow = $("<td>").text(t.firstTrain);
+        var frequencyRow = $("<td>").text(t.frequency);
 
         // set up the site moment.com 
-        var train = moment(t.nextArrival, "HH:mm").subtract(1, "years");
-        var time = moment().diff(moment(train), "minutes");
-        var time1 = time % t.frequency;
-        var minAway = $("<td>").text(t.frequency - time1);
-        var nexTArrival = moment().add(minAway, "minutes");
-        var nextTrainArrival = $("<td>").text(moment(nexTArrival).format("hh:mm"));
+       
+        var trainTimeCalc = moment(t.firstTrain, "HH:mm:ss a").subtract(1, "years");
+        var time = moment().diff(moment(trainTimeCalc), "minutes");
+        var remainder = time % t.frequency;
+        var minAway = $("<td>").text(t.frequency - remainder);
+        var nextArrival = moment().add(minAway, "minutes");
+        var nextTrainArrival = $("<td>").text(moment(nextArrival).format("hh:mm:ss a"));
 
-        
 
         //append the data in each row
         newRow.append(nameRow);
         newRow.append(destinationRow);
-        newRow.append(frecuencyRow);
+        newRow.append(firsttrainRow);
+        newRow.append(frequencyRow);
         newRow.append(nextTrainArrival);
         newRow.append(minAway);
-        nameRow.append(update);
+        // nameRow.append(update);
         newRow.append(remove);
         
 
-        $("#train-table").append(newRow);
+        $("#train-table > tbody").append(newRow);
 
     });
 
+    $("#remove").on("click", function(){
+        $("<td>").remove("");
+    });
 
 
+// moment js, for formated time //
+// var trainTimeCalc = moment(trainFirstTime, "HH:mm").subtract(1, "years");
 
 
-   
-    
+// calculate difference, between start time and current time //
+// var diffTime = moment().diff(moment(trainTimeCalc), "minutes");
+
+// calculates the remaining minutes //
+// var tRemainder = diffTime % trainFrequency;
+
+// the next train arrival time in minutes //
+// var minAway = trainFrequency - tRemainder;
+
+// the next arrival time of train
+// var nexTArrival = moment().add(minAway, "minutes");
+// var nextTrainArrival = moment(nexTArrival).format("hh:mm");
+
+   ///////////////////////
+
+//    var trainTime = moment.unix(firstTime).format("hh:mm");
+   //calculate difference between times
+//    var difference =  moment().diff(moment(trainTime),"minutes");
