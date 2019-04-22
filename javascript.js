@@ -15,7 +15,7 @@ var config = {
     var destination;
     var firstTrain;
     var frequency;
-    
+    var justPushed;
 
 //click on the button Submit
    $("#submit").on("click", function(event){
@@ -25,7 +25,7 @@ var config = {
         firstTrain = $("#first-train-input").val().trim();
         frequency = $("#frequency-input").val().trim();
 
-        database.ref().push({
+            justPushed = database.ref().push({
             name:name,
             destination:destination,
             firstTrain:firstTrain,
@@ -80,31 +80,13 @@ var config = {
         $("#train-table > tbody").append(newRow);
 
     });
-
-    $("#remove").on("click", function(){
-        $("<td>").remove("");
+    $(document).ready(function() {
+        $("#remove").show();  
+         $("#remove").on("click", function(){
+            $(this).parent().remove();
+            justPushed.remove(function(error) {
+                 alert(error ? "Uh oh!" : "Success!");
+              });
+        });
     });
 
-
-// moment js, for formated time //
-// var trainTimeCalc = moment(trainFirstTime, "HH:mm").subtract(1, "years");
-
-
-// calculate difference, between start time and current time //
-// var diffTime = moment().diff(moment(trainTimeCalc), "minutes");
-
-// calculates the remaining minutes //
-// var tRemainder = diffTime % trainFrequency;
-
-// the next train arrival time in minutes //
-// var minAway = trainFrequency - tRemainder;
-
-// the next arrival time of train
-// var nexTArrival = moment().add(minAway, "minutes");
-// var nextTrainArrival = moment(nexTArrival).format("hh:mm");
-
-   ///////////////////////
-
-//    var trainTime = moment.unix(firstTime).format("hh:mm");
-   //calculate difference between times
-//    var difference =  moment().diff(moment(trainTime),"minutes");
